@@ -1,0 +1,42 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(dplyr)
+
+```
+
+```{r}
+stl_lead <- readr::read_csv(here::here("data", "stl_lead.csv"), na = "#N/A") |> 
+  clean_names()
+```
+
+```{r}
+summary(stl_lead)
+```
+
+```{r}
+stl_lead_prop <- stl_lead |> dplyr::mutate(prop_white = ((white / total_pop)*100))
+```
+
+```{r}
+ggplot(data = stl_lead_prop, aes(x = pct_elevated, y = white)) +
+  geom_jitter(aes(color = pct_elevated), show.legend = FALSE) +
+  scale_color_gradient(low = "blue", high = "orange") +
+  theme_minimal() +
+  labs(title = "Percentage of Children with Elevated Blood Lead Levels",
+       x = "Percent Elevated",
+       y = "white")
+
+stl_lead_prop
+
+```
+
+```{r}
+ggsave(here::here("figs", "Percentage of Children with Elevated Blood Lead Levels.jpg"), height = 5, width = 6)
+```
